@@ -1,34 +1,23 @@
 resource "aws_lb" "main" {
-  name               = "test-lb-tf"
+  name               = "${var.env}-alb"
   internal           = var.internal
   lb_type = var.lb_type
-  security_groups    = var.sg_ingress_cidr
-  subnets            = [for subnet in aws_subnet.public : subnet.id]
+  security_groups    = [aws_security_group.main.id]
+  subnets            = var.
 
-  enable_deletion_protection = true
-
-  access_logs {
-    bucket  = aws_s3_bucket.lb_logs.id
-    prefix  = "test-lb"
-    enabled = true
-  }
-
-  tags = {
-    Environment = "production"
-  }
 }
 
 resource "aws_security_group" "main" {
-  name        = "allow_tls"
-  description = "Allow TLS inbound traffic and all outbound traffic"
+  name        = "${var.env}-alb-sg"
+  description = "${var.env}-alb-sg"
   vpc_id      = var.vpc_id
 
   ingress {
-    description = "SSH"
-    from_port   = 22
-    to_port     = 22
+    description = "APP"
+    from_port   = var.sg_port
+    to_port     = var.sg_port
     protocol    = "tcp"
-    cidr_blocks      = ["0.0.0.0/0"]
+    cidr_blocks      = var.sg_ingress_cidr
   }
 
   egress {
