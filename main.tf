@@ -1,17 +1,17 @@
 resource "aws_lb" "main" {
   name               = "${var.env}-alb"
   internal           = var.internal
-  lb_type = var.lb_type
+  load_balancer_type = var.lb_type
   security_groups    = [aws_security_group.main.id]
   subnets            = var.subnets
-
+  tags               = merge(local.tags, { Name = "${var.env}-alb" })
 }
 
 resource "aws_security_group" "main" {
   name        = "${var.env}-alb-sg"
   description = "${var.env}-alb-sg"
   vpc_id      = var.vpc_id
-
+  tags               = merge(local.tags, { Name = "${var.env}-alb-sg" })
   ingress {
     description = "APP"
     from_port   = var.sg_port
