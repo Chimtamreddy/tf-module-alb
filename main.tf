@@ -3,7 +3,7 @@ resource "aws_lb" "main" {
   internal           = var.internal
   lb_type = var.lb_type
   security_groups    = [aws_security_group.main.id]
-  subnets            = var.
+  subnets            = var.subnets
 
 }
 
